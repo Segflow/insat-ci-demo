@@ -6,14 +6,22 @@ jobs:
 
     environment:
       TEST_RESULTS: /tmp/test-results
+      BECHMARK_RESULTS: /tmp/benchmark-results
     
     steps:
       - checkout
       - run: mkdir -p $TEST_RESULTS
+      - run: mkdir -p $BECHMARK_RESULTS
       - run:
           name: Run tests
           command: |
-            go test -benchmem -run=^$ -bench . | tee ${TEST_RESULTS}/go-test.out
-            go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml
+            gotestsum --junitfile ${TEST_RESULTS}/unit-tests.xml
+      - run:
+          name: Run benchmarks
+          command: |
+            go test -benchmem -run=^$ -bench . | tee ${BECHMARK_RESULTS}/benchmark.txt
       - store_test_results:
           path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/benchmark-results
+          destination: benchmarks
