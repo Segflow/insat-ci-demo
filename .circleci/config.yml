@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image:  circleci/golang:1.13
+
+    environment:
+      TEST_RESULTS: /tmp/test-results
+    
+    steps:
+      - checkout
+      - run:
+        name: Run tests
+        command: |
+          go test -benchmem -run=^$ -bench . | tee ${TEST_RESULTS}/go-test.out
+          go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml
+      - store_test_results:
+          path: /tmp/test-results
