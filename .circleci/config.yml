@@ -10,9 +10,9 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Run tests
-        command: |
-          go test -benchmem -run=^$ -bench . | tee ${TEST_RESULTS}/go-test.out
-          go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml
+          name: Run tests
+          command: |
+            go test -benchmem -run=^$ -bench . | tee ${TEST_RESULTS}/go-test.out
+            go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml
       - store_test_results:
           path: /tmp/test-results
